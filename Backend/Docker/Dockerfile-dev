@@ -3,8 +3,11 @@ FROM continuumio/miniconda3:4.7.12-alpine
 ADD . /app
 WORKDIR /app
 
+
+
 RUN /opt/conda/bin/conda install --yes --file requirements_conda.txt && \
-	/opt/conda/bin/pip install -r requirements_pip.txt
+	/opt/conda/bin/pip install -r requirements_pip.txt && \
+	/opt/conda/bin/conda install --yes -c conda-forge fbprophet
 
 EXPOSE 5000
 

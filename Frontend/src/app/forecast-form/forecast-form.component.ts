@@ -28,9 +28,8 @@ export class ForecastFormComponent implements OnInit {
   };
  
   public models: any[] = [
-    {value: 'autoarima_python', viewValue: 'auto-ARIMA (Python)', disabled: false},
-    {value: 'autoarima_r', viewValue: 'auto-ARIMA (R) (coming soon)', disabled:true},
-    {value: 'prophet_python', viewValue: 'Prophet (Python) (coming soon)', disabled:true}
+    {value: 'autoarima_python', viewValue: 'auto-ARIMA'},
+    {value: 'prophet_python', viewValue: 'Prophet'}
   ];
 
 
