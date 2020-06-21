@@ -1,0 +1,30 @@
+version: "3.7"
+services:
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Docker/Dockerfile-dev
+    ports:
+    - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+    volumes:
+      - ./Backend:/app
+    #tty: true   
+    #command: /bin/sh
+    command: /opt/conda/bin/python app.py
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Docker/Dockerfile-dev
+    ports:
+    - "4200:4200"
+    - "49153:49153"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./Frontend:/app
+    #tty: true
+    # command: /bin/sh
+    command: ng serve --host 0.0.0.0

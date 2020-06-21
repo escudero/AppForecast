@@ -1,0 +1,120 @@
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        Este sistema foi criado para fins de estudo e testes, não nos responsabilizamos pelo uso. <br />
+        No exemplo abaixo podemos realizar testes com os modelos de forecast mais utilizado no mercado, com isso podemos analisar o seu comportamento. 
+      </div>
+    </div>
+  </div>
+</div>
+
+<form [formGroup]="forecastForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="col col-dataset">
+
+      <div class="card">
+        <div class="card-header">
+          Time Series
+        </div>
+        <div class="card-body">
+          <hot-table
+            class="hot-table"
+            height=260
+            [settings]="hotSettings"
+            [data]="dataset"
+            [afterChange]="changeDataset"
+            licenseKey="non-commercial-and-evaluation">
+            <hot-column data="value" title="Dataset" type="numeric"></hot-column>
+          </hot-table>
+        </div>
+      </div>
+
+    </div>
+    <div class="col">
+
+      <div class="card">
+        <div class="card-header">
+          Model / Parameters
+        </div>
+        <div class="card-body">
+          <div class="form-group row">
+            <label class="col-sm-12 col-md-12 col-lg-2 col-form-label-sm">Model</label>
+            <div class="col-sm-12 col-md-7 col-lg-5">
+              <select class="form-control form-control-sm" formControlName="model">
+                <option *ngFor="let model of models" [ngValue]="model.value" [disabled]="model.disabled">
+                  {{ model.viewValue }}
+                </option>            
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-12 col-md-12 col-lg-2 col-form-label-sm">Alpha</label>
+            <div class="col-sm-12 col-md-7 col-lg-5">
+              <input type="number" class="form-control form-control-sm" formControlName="alpha" step="0.01" min="0" max="1" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-12 col-md-12 col-lg-2 col-form-label-sm">N. Periods</label>
+            <div class="col-sm-12 col-md-7 col-lg-5">
+              <input type="number" class="form-control form-control-sm" formControlName="n_periods" (ngModelChange)="updateChart()" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-12 col-md-12 col-lg-2 col-form-label-sm">Seasonal</label>
+            <div class="col-sm-12 col-md-7 col-lg-5">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" formControlName="seasonal" id="customSwitch1">
+                <label class="custom-control-label" for="customSwitch1"></label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-7">
+              <button type="submit" class="btn btn-primary btn-sm btn-block" [disabled]="!forecastForm.valid">
+                <span class="spinner-grow spinner-grow-sm" [style.visibility]="showLoading ? 'visible' : 'hidden'"></span>
+                FORECAST
+              </button>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>
+
+</form>
+
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="card-header">
+        Result
+        <div class="icons_exports">
+          <a href='#'><img src="/assets/icon_csv.png" /></a>
+          <a href='#'><img src="/assets/icon_xlsx.png" /></a>
+        </div>
+      </div>
+      <div class="card-body">
+        <canvas baseChart width="400" height="150"
+          [datasets]="lineChartData"
+          [labels]="lineChartLabels"
+          [options]="lineChartOptions"
+          [colors]="lineChartColors"
+          [legend]="lineChartLegend"
+          [chartType]="lineChartType">
+        </canvas>
+        <div class="chart-empty" [hidden]="!showEmpty">
+          <div class="text-empty">
+            Preencher o campo acima com uma série temporal e clicar em previsão.
+          </div>
+        </div>
+        <div class="chart-loading" [hidden]="!showLoading">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

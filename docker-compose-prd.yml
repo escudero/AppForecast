@@ -1,0 +1,20 @@
+version: "3.7"
+services:
+  backend:
+    build:
+      context: ./Backend
+      dockerfile: Docker/Dockerfile-prd
+    ports:
+    - "5000:443"
+    tty: true
+    #command: /bin/sh
+    #command: /opt/conda/bin/python app.py
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Docker/Dockerfile-prd
+    ports:
+    - "4200:80"
+    - "443:443"
+    tty: true
+    #command: /bin/sh

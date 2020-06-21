@@ -1,0 +1,25 @@
+FROM tiangolo/uwsgi-nginx-flask:python3.7
+
+ADD . /app
+WORKDIR /app
+
+RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.7.12.1-Linux-x86_64.sh -O ~/miniconda.sh && \
+    /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+    rm ~/miniconda.sh && \
+    /opt/conda/bin/conda clean -tipsy && \
+    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate base" >> ~/.bashrc && \
+	\
+    /opt/conda/bin/conda config --add channels conda-forge && \
+    /opt/conda/bin/conda install --yes --file requirements_conda.txt && \
+    /opt/conda/bin/conda install --yes uwsgi==2.0.18 && \
+	/opt/conda/bin/pip install -r requirements_pip.txt && \
+    \
+    rm main.py prestart.sh uwsgi.ini
+
+ENV PATH /opt/conda/bin:$PATH
+EXPOSE 80
+
+COPY ./Docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./Docker/uwsgi.ini /app/uwsgi.ini
