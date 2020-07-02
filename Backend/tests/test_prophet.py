@@ -10,25 +10,35 @@ import json
 from src.app import app
 
 
+####################################
+#### TESTE A REQUISIÇÃO PROPHET ####
+####################################
+
+##################################################
+# Teste a previsão
 def test_forecast_prophet():
     warnings.filterwarnings("ignore")
-    """Teste a função arima"""
+    """Teste a função Prophet"""
     data = {"data":[1,2,3,4,5,6,7,8,9,10],"model":"prophet_python","params":{"alpha":0.8,"n_periods":5,"seasonal":True}}
     rv = app.test_client().post('/forecast', json=data)
     ret = json.loads(rv.data)
     assert [round(v) for v in ret['forecast']] == [11,12,13,14,15]
 
+##################################################
+# Teste o intervalo de confiança superior
 def test_forecast_prophet_conf_int_upper():
     warnings.filterwarnings("ignore")
-    """Teste a função arima"""
+    """Teste a função Prophet"""
     data = {"data":[1,2,3,4,5,6,7,8,9,10],"model":"prophet_python","params":{"alpha":0.8,"n_periods":5,"seasonal":True}}
     rv = app.test_client().post('/forecast', json=data)
     ret = json.loads(rv.data)
     assert [round(v[0]) for v in ret['conf_int']] == [11,12,13,14,15]
 
+##################################################
+# Teste o intervalo de confiança inferior
 def test_forecast_prophet_conf_int_lower():
     warnings.filterwarnings("ignore")
-    """Teste a função arima"""
+    """Teste a função Prophet"""
     data = {"data":[1,2,3,4,5,6,7,8,9,10],"model":"prophet_python","params":{"alpha":0.8,"n_periods":5,"seasonal":True}}
     rv = app.test_client().post('/forecast', json=data)
     ret = json.loads(rv.data)

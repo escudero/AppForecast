@@ -11,6 +11,8 @@ app = FlaskAPI(__name__, static_folder=None)
 app.url_map.strict_slashes = False
 
 
+######################################################
+# Valida se o cliente pode ou não uma requisição API
 @app.after_request
 def allow_cross_domain(response):
     """Hook to set up response headers."""
@@ -19,6 +21,8 @@ def allow_cross_domain(response):
     return response
 
 
+##########################################################
+# Retorna a verão das bibliotecas utilizadas na aplicação
 @app.route('/status', methods=['GET'])
 def status():
     return {
@@ -28,6 +32,8 @@ def status():
     }
 
 
+##########################################################
+# Função para requisição do formulário da aplicação
 @app.route('/forecast/', methods=['POST'])
 def forecast():
     code = uuid.uuid4()
@@ -38,6 +44,7 @@ def forecast():
     content = request.json
     data = content['data']
     params = content['params']
+    # Verifica se o usuário preencheu autoarima ou prophet
     if content['model'] == 'autoarima_python':
         forecast, conf_int = execute_autoarima_python(data, params)
     elif content['model'] == 'prophet_python':
@@ -49,6 +56,8 @@ def forecast():
         'conf_int': conf_int.tolist()
     })
 
+##########################################################
+# Chamada de exeução do auto.ARIMA
 def execute_autoarima_python(data, params):
     alpha = params['alpha']
     seasonal = params['seasonal']
@@ -65,6 +74,8 @@ def execute_autoarima_python(data, params):
     forecast, conf_int = model.predict(n_periods=n_periods, alpha=alpha, return_conf_int=True)
     return forecast, conf_int
 
+##########################################################
+# Chamada de exeução do Prophet
 def execute_prophet_python(data, params):
     alpha = params['alpha']
     seasonal = params['seasonal']
